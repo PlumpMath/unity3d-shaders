@@ -8,7 +8,7 @@
 	{
 		"**/.DS_Store":true,
 		"**/.git":true,
-		"**/.gitignore":false,
+		"**/.gitignore":true,
 		"**/.gitattributes":true,
 		"**/.gitmodules":true,
 		"**/.svn":true,

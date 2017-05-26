@@ -1,48 +1,54 @@
-﻿Shader "Custom/Shader01" {
+﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
+Shader "Custom/Shader01" {
+
 	Properties {
-		_Color ("Color", Color) = (1,1,1,1)
-		_MainTex ("Albedo (RGB)", 2D) = "white" {}
-		_Glossiness ("Smoothness", Range(0,1)) = 0.5
-		_Metallic ("Metallic", Range(0,1)) = 0.0
+		 // Color property for material inspector, default to white
+		_Color ("Color", Color) = (1.0, 1.0, 1.0, 1.0)
 	}
+
 	SubShader {
-		Tags { "RenderType"="Opaque" }
-		LOD 200
-		
-		CGPROGRAM
-		// Physically based Standard lighting model, and enable shadows on all light types
-		#pragma surface surf Standard fullforwardshadows
+		Pass {
 
-		// Use shader model 3.0 target, to get nicer looking lighting
-		#pragma target 3.0
+			CGPROGRAM
 
-		sampler2D _MainTex;
+			// Pragmas
+			#pragma vertex vert
+			#pragma fragment frag
 
-		struct Input {
-			float2 uv_MainTex;
-		};
+			// User Defined Variables
 
-		half _Glossiness;
-		half _Metallic;
-		fixed4 _Color;
+			// Color from the material
+			uniform float4 _Color;
 
-		// Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
-		// See https://docs.unity3d.com/Manual/GPUInstancing.html for more information about instancing.
-		// #pragma instancing_options assumeuniformscaling
-		UNITY_INSTANCING_CBUFFER_START(Props)
-			// put more per-instance properties here
-		UNITY_INSTANCING_CBUFFER_END
+			// Base Input Structs
+			struct vertexInput {
+				float4 vertex : POSITION;
+			};
 
-		void surf (Input IN, inout SurfaceOutputStandard o) {
-			// Albedo comes from a texture tinted by color
-			fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color;
-			o.Albedo = c.rgb;
-			// Metallic and smoothness come from slider variables
-			o.Metallic = _Metallic;
-			o.Smoothness = _Glossiness;
-			o.Alpha = c.a;
+			struct vertexOutput {
+				float4 position : SV_POSITION;
+			};
+
+
+			// Vertex functions
+			vertexOutput vert(vertexInput v) {
+				vertexOutput o;
+				o.position = UnityObjectToClipPos(v.vertex);
+				return o;
+			}
+
+			// Fragment functions
+			// Pixel shader, no inputs needed
+			float4 frag(vertexOutput o) : Color {
+				return _Color;
+			}
+
+			ENDCG
+
 		}
-		ENDCG
 	}
+
 	FallBack "Diffuse"
+
 }

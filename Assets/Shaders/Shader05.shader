@@ -1,4 +1,4 @@
-﻿Shader "Custom/Shader03" {
+﻿Shader "Custom/Shader05" {
 
 	Properties {
 		 // Color property for material inspector, default to white
@@ -30,25 +30,20 @@
 			};
 
 			struct vertexOutput {
-				half3 normal : TEXCOORD0;
 				float4 position : SV_POSITION;
 				fixed4 color : COLOR;
 			};
 
-
-			// Vertex functions
 			vertexOutput vert(vertexInput v) {
 				vertexOutput o;
-				// Following statement is converted to next:
-				// ->    o.position = mul(UNITY_MATRIX_MVP, v.vertex);
 				o.position = UnityObjectToClipPos(v.vertex);
-				o.normal = UnityObjectToWorldNormal(v.normal);
+				o.color.xyz = v.normal * 0.5 + 0.5;
+				o.color.w = 1.0;
 				return o;
 			}
 
-			// Fragment functions
-			float4 frag(vertexOutput o) : Color {
-				return _Color;
+			fixed4 frag(vertexOutput i) : SV_Target {
+				return i.color;
 			}
 
 			ENDCG

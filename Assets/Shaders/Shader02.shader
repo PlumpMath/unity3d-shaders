@@ -1,48 +1,32 @@
-﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
-
-Shader "Custom/Shader02" {
+﻿Shader "Custom/Shader02" {
 
 	Properties {
-		_Color ("Color", Color) = (1.0, 1.0, 1.0, 1.0)
+		_MainTex ("Texture", 2D) = "red" {}
+		_BumpMap ("Bumpmap", 2D) = "bump" {}
 	}
 
 	SubShader {
-		Pass {
 
-			CGPROGRAM
+		Tags { "RenderType" = "Opaque" }
+		
+		CGPROGRAM
 
-			// Pragmas
-			#pragma vertex vert
-			#pragma fragment frag
+		#pragma surface surf Lambert
 
-			// User Defined Variables
-			uniform float4 _Color;
+		sampler2D _MainTex;
+		sampler2D _BumpMap;
 
-			// Base Input Structs
-			struct vertexInput {
-				float4 vertex : POSITION;
-			};
+		struct Input {
+			float2 uv_MainTex;
+			float2 uv_BumpMap;
+		};
 
-			struct vertexOutput {
-				float4 position : SV_POSITION;
-			};
-
-
-			// Vertex functions
-			vertexOutput vert(vertexInput v) {
-				vertexOutput o;
-				o.position = UnityObjectToClipPos(v.vertex);
-				return o;
-			}
-
-			// Fragment functions
-			float4 frag(vertexOutput i) : Color {
-				return _Color;
-			}
-
-			ENDCG
-
+		void surf (Input IN, inout SurfaceOutput o) {
+			o.Albedo = tex2D (_MainTex, IN.uv_MainTex).rgb;      // Diffuse Color
+			o.Normal = UnpackNormal(tex2D(_BumpMap, IN.uv_BumpMap));
 		}
+
+		ENDCG
 	}
 
 	FallBack "Diffuse"
