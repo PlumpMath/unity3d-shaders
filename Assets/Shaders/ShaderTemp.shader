@@ -2,7 +2,7 @@
 
 Shader "Custom/ShaderTemp" {
 	Properties {
-		_Color ("Color", Color) = (1.0, 1.0, 1.0, 1.0)
+		_Color ("Color", Color) = (1.0, 1.0, 1.0, 1.0) // R, G, B, A
 		// 2
 		_Value1 ("Value 1", Float) = 0.5
 		_Value2 ("Value 2", Float) = 0.5
@@ -52,8 +52,8 @@ Shader "Custom/ShaderTemp" {
 			/* Begin of Example 2
 			v2f vert(appdata_base v) {
 				v2f o;
-				v.vertex.xyz += v.normal * _Value1;
-				v.vertex.xyz += sin((v.vertex.y + _Time * _Value3) * _Value2) * _Value1;
+				//v.vertex.xyz += v.normal * _Value1;
+				//v.vertex.xyz += sin((v.vertex.y + _Time * _Value3) * _Value2) * _Value1;
 				v.vertex.xyz += v.normal * (sin((v.vertex.x + _Time * _Value3) * _Value2) + cos((v.vertex.z + _Time * _Value3) * _Value2)) * _Value1;
 				o.color = float4(v.normal, 1) * 0.5 + 0.5;
 				o.position = UnityObjectToClipPos(v.vertex);
@@ -82,7 +82,7 @@ Shader "Custom/ShaderTemp" {
 			// Sample the texture and multiplies by the color property
 			fixed4 frag (v2f i) : SV_Target {
 				fixed4 texcol = tex2D (_MainTex, i.uv);
-            	return texcol * _Color;
+				return texcol * _Color;
 			}
 			*/
 
@@ -99,7 +99,7 @@ Shader "Custom/ShaderTemp" {
 
 			// Sample the texture and multiplies by the color property
 			fixed4 frag (v2f i) : SV_Target {
-            	return i.color;
+				return i.color;
 			}
 			/**/
 
